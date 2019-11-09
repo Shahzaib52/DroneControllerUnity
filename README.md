@@ -7,4 +7,5 @@ Highly optimised for mobile devices, it is as real as I wanted it to be but you 
 In case you need any help understanding the code or anything in general, just shoot me an email at: shahzaib52@hotmail.com, I'll try to get back to you at earliest.
 
 Can't wait to see what you can make with it.
+
 Happy Coding.
