@@ -6,7 +6,7 @@ public class DroneController : MonoBehaviour
 {
 
     [Range(-1, 1)]
-    public float Thrust, Tilt, Lift;
+    public float Thrust, Tilt, Lift, Rotate;
 
     [Space(10)]
     public Rigidbody rb;
@@ -16,7 +16,13 @@ public class DroneController : MonoBehaviour
     public float lift = 5;
     public float speed = 5;
 
-    public float stablize = 5;
+    public float rotationSpeed = 5;
+    public float blendSpeed = 2;
+
+    [Space(10)]
+    public float angle;
+
+    private Quaternion rotation;
 
     private void Start()
     {
@@ -26,17 +32,22 @@ public class DroneController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Thrust = Time.fixedDeltaTime * Input.GetAxis("Vertical") * speed;
-        Tilt = Time.fixedDeltaTime * Input.GetAxis("Horizontal") * speed;
-        Lift = Time.fixedDeltaTime * Input.GetAxis("Lift") * lift;
+        Lift = Input.GetAxis("Lift");
+        Rotate = Input.GetAxis("Rotate");
+        Thrust = Input.GetAxis("Vertical");
+        Tilt = Input.GetAxis("Horizontal");
 
         var v = anim.GetFloat("Vertical");
         var h = anim.GetFloat("Horizontal");
+        var r = anim.GetFloat("Rotate");
 
-        anim.SetFloat("Vertical", Mathf.Clamp(Mathf.Lerp(v, Thrust, 2 * Time.deltaTime), -1, 1));
-        anim.SetFloat("Horizontal", Mathf.Clamp(Mathf.Lerp(h, Tilt, 2 * Time.deltaTime), -1, 1));
+        anim.SetFloat("Vertical", Mathf.Clamp(Mathf.Lerp(v, Thrust, blendSpeed * Time.deltaTime), -1, 1));
+        anim.SetFloat("Horizontal", Mathf.Clamp(Mathf.Lerp(h, Tilt, blendSpeed * Time.deltaTime), -1, 1));
+        anim.SetFloat("Rotate", Mathf.Clamp(Mathf.Lerp(r, Rotate, blendSpeed * Time.deltaTime), -1, 1));
 
-        rb.AddForce(new Vector3(Tilt, Lift, Thrust), ForceMode.Impulse);
+        var dir = new Vector3(Tilt * speed, Lift * lift, Thrust * speed);
+
+        rb.AddRelativeForce(dir, ForceMode.Impulse);
 
         var cv3 = rb.velocity;
 
@@ -46,6 +57,14 @@ public class DroneController : MonoBehaviour
 
         rb.velocity = cv3;
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 5);
+        angle += Input.GetAxis("Rotate") * rotationSpeed;
+
+        if (angle >= 360)
+            angle = 0;
+        else if (angle <= -360)
+            angle = 0;
+
+        rotation = Quaternion.AngleAxis(angle, Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 }
