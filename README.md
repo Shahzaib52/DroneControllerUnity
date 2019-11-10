@@ -10,6 +10,8 @@ I'd like to thank UltraSuperBox user from BlendSwap Community for sharing his dr
 
 https://www.blendswap.com/blend/6034
 
+Unity: 2018.2.6
+
 I had to make some small adjustments to the blend file for the drone model to work with Unity Animations correctly.
 
 Can't wait to see what you can make with it.
