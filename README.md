@@ -1,4 +1,4 @@
-# Simple-Drone-Controller
+# Simple Drone Controller Unity
 
 This is a very basic and generic drone controller that can be served as a pretty solid base for many projects. With minimum efforts, it can be used for helicopter and harrier as well.
 
